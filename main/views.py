@@ -100,6 +100,11 @@ class TempRegistrationDoneView(FormView):
 
     def get_success_url(self):
         return reverse("signup", kwargs={"token": self.token})
+    
+    def get_form_kwargs(self, *args, **kwargs):
+        kwargs = super().get_form_kwargs(*args, **kwargs)
+        kwargs["email"] = self.email
+        return kwargs
 
 
 @require_POST

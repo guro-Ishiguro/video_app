@@ -22,7 +22,7 @@ urlpatterns = [
     path(
         "temp_registration_done/<token>/resend",
         views.resend_registration_email,
-        name="resend",
+        name="registration_resend",
     ),
     path("login", views.LoginView.as_view(), name="login"),
     path(
@@ -43,6 +43,6 @@ urlpatterns = [
     path(
         "password_reset_confirmation/<token>/resend",
         views.resend_password_reset_email,
-        name="resend",
+        name="password_reset_resend",
     ),
 ]

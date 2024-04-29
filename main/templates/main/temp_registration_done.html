@@ -26,7 +26,7 @@
         </div>
     </form>
     <p class="caption">メールが届きませんか？</p>
-    <form action="{% url 'resend' token %}" method="POST">
+    <form action="{% url 'registration_resend' token %}" method="POST">
         {% csrf_token %}
         <input type="hidden" value="{{ token }}" name="token">
         <button class="regenerate-code-btn" type="submit"><span>再送する</span></button>
