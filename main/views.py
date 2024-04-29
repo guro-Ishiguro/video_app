@@ -27,8 +27,10 @@ from .models import AuthenticationCode
 
 User = get_user_model()
 
+
 class HomeView(TemplateView):
     template_name = "main/home.html"
+
 
 def generate_random_code(email):
     random_number = get_random_string(4, "0123456789")
@@ -36,6 +38,7 @@ def generate_random_code(email):
         email=email, defaults={"code": random_number}
     )
     return random_number
+
 
 def registration_send_email(email):
     random_code = generate_random_code(email)
@@ -49,6 +52,7 @@ def registration_send_email(email):
     recipient_list = [email]
     send_mail(subject, message, from_email, recipient_list)
 
+
 def password_reset_send_email(email):
     random_code = generate_random_code(email)
     context = {
@@ -60,6 +64,7 @@ def password_reset_send_email(email):
     from_email = None
     recipient_list = [email]
     send_mail(subject, message, from_email, recipient_list)
+
 
 class TempRegistrationView(FormView):
     template_name = "main/temp_registration.html"
@@ -73,6 +78,7 @@ class TempRegistrationView(FormView):
 
     def get_success_url(self):
         return reverse("temp_registration_done", kwargs={"token": self.token})
+
 
 class TempRegistrationDoneView(FormView):
     template_name = "main/temp_registration_done.html"
@@ -94,7 +100,8 @@ class TempRegistrationDoneView(FormView):
 
     def get_success_url(self):
         return reverse("signup", kwargs={"token": self.token})
-    
+
+
 @require_POST
 def resend_registration_email(request, token):
     try:
@@ -106,10 +113,11 @@ def resend_registration_email(request, token):
     messages.success(request, "入力されたメールアドレスに送信しました。")
     context = {
         "form": form,
-        "email":email,
+        "email": email,
         "token": token,
     }
     return render(request, "main/temp_registration_done.html", context)
+
 
 class SignUpView(FormView):
     template_name = "main/signup.html"
@@ -154,7 +162,8 @@ class PasswordResetEmailView(FormView):
 
     def get_success_url(self):
         return reverse("password_reset_confirmation", kwargs={"token": self.token})
-    
+
+
 class PasswordResetConfirmationView(FormView):
     template_name = "main/password_reset_confirmation.html"
     form_class = RegistrationCodeForm
@@ -180,7 +189,8 @@ class PasswordResetConfirmationView(FormView):
 
     def get_success_url(self):
         return reverse("password_reset", kwargs={"token": self.token})
-    
+
+
 @require_POST
 def resend_password_reset_email(request, token):
     try:
@@ -196,6 +206,7 @@ def resend_password_reset_email(request, token):
         "token": token,
     }
     return render(request, "main/password_reset_confirmation.html", context)
+
 
 class PasswordResetView(FormView):
     template_name = "main/password_reset.html"

@@ -111,9 +111,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "username",
-                    models.CharField(
-                        default="ゲスト", max_length=50, verbose_name="ユーザ名"
-                    ),
+                    models.CharField(default="ゲスト", max_length=50, verbose_name="ユーザ名"),
                 ),
                 (
                     "profile",
@@ -177,15 +175,11 @@ class Migration(migrations.Migration):
                 ("description", models.TextField(max_length=500, verbose_name="説明")),
                 (
                     "thumbnail",
-                    models.ImageField(
-                        upload_to="thumbnail/", verbose_name="サムネイル"
-                    ),
+                    models.ImageField(upload_to="thumbnail/", verbose_name="サムネイル"),
                 ),
                 (
                     "uploaded_at",
-                    models.DateTimeField(
-                        auto_now_add=True, verbose_name="動画投稿時刻"
-                    ),
+                    models.DateTimeField(auto_now_add=True, verbose_name="動画投稿時刻"),
                 ),
                 (
                     "video",

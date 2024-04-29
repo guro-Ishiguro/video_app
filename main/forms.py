@@ -24,6 +24,7 @@ class EmailForm(forms.ModelForm):
             "email": forms.EmailInput(attrs={"class": "form", "placeholder": "メールアドレス"})
         }
 
+
 class RegistrationCodeForm(forms.ModelForm):
     def __init__(self, email=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -62,6 +63,7 @@ class PasswordForm(forms.ModelForm):
             )
         }
 
+
 class EmailAuthenticationForm(forms.Form):
     email = forms.EmailField(
         widget=forms.EmailInput(
@@ -97,7 +99,8 @@ class EmailAuthenticationForm(forms.Form):
 
     def get_user(self):
         return self.user_cache
-    
+
+
 class PasswordResetEmailForm(forms.Form):
     email = forms.EmailField(
         widget=forms.EmailInput(
@@ -111,7 +114,8 @@ class PasswordResetEmailForm(forms.Form):
         if not user.exists():
             raise ValidationError("このメールアドレスを使用しているユーザーは存在しません。")
         return email
-    
+
+
 class PasswordResetForm(forms.Form):
     new_password1 = forms.CharField(
         widget=forms.PasswordInput({"placeholder": "新しいパスワード", "class": "form"})
