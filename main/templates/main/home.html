@@ -9,7 +9,7 @@
 <div class="video-list-container">
     {% for video in videos %}
     <div class="video-information-container">
-        <a class="video-thumbnail-wrapper" href="">
+        <a class="video-thumbnail-wrapper" href="{% url 'video_play' video.id %}">
             <img src="{{ video.thumbnail.url }}">
         </a>
         <div class="video-detail-container">

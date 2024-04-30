@@ -1,4 +1,5 @@
 from datetime import timedelta
+import os
 
 from django.contrib.auth.models import AbstractUser
 from django.db import models
@@ -73,3 +74,6 @@ class Video(models.Model):
             return f"{delta.days} 日前"
         else:
             return "1 週間以上前"
+        
+    def file_name(self):
+        return os.path.splitext(os.path.basename(self.video.name))[0]

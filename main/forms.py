@@ -178,3 +178,8 @@ class VideoSearchForm(forms.Form):
         widget=forms.TextInput(attrs={"placeholder": "動画を検索", "class": "search-form"}),
     )
 
+class ViewsCountForm(forms.ModelForm):
+    class Meta:
+        model = Video
+        fields = ("views_count",)
+

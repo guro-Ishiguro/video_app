@@ -13,7 +13,7 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 from django.urls import reverse_lazy, reverse
 from django.utils.crypto import get_random_string
-from django.views.generic import TemplateView, FormView, ListView
+from django.views.generic import TemplateView, FormView, ListView, DetailView
 from django.views.decorators.http import require_POST
 
 from .forms import (
@@ -23,6 +23,7 @@ from .forms import (
     PasswordResetForm,
     PasswordResetEmailForm,
     RegistrationCodeForm,
+    ViewsCountForm,
     VideoUploadForm,
     VideoSearchForm,
 )
@@ -287,4 +288,21 @@ class SearchVideoView(LoginRequiredMixin, ListView):
                 queryset = queryset.order_by("-uploaded_at")[:5]
             else:
                 queryset = queryset.order_by("-views_count")[:5]
+        return queryset
+    
+class PlayVideoView(LoginRequiredMixin, DetailView):
+    template_name = "main/video_play.html"
+    model = Video
+
+    def post(self, request, *args, **kwargs):
+        views_count_form = ViewsCountForm(request.POST)
+        if views_count_form.is_valid():
+            views_count = views_count_form.cleaned_data["views_count"]
+            video = Video.objects.filter(pk=kwargs["pk"])
+            video.update(views_count=views_count)
+        return redirect("video_play", kwargs["pk"])
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = queryset.filter(pk=self.kwargs["pk"])
         return queryset
