@@ -59,8 +59,8 @@
     {% else %}
     <div class="others">
         <div class="rules">
-            <a href="" class="terms">利用規約</a>・
-            <a href="" class="policy">プライバシーポリシー</a>
+            <a href="{% url 'terms' %}" class="terms">利用規約</a>・
+            <a href="{% url 'privacy_policy' %}" class="policy">プライバシーポリシー</a>
         </div>
     </div>
     {% endif %}

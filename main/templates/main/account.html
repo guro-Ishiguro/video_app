@@ -73,6 +73,47 @@
         {% endfor %}
     </div>
 </div>
+{% if user.id == request.user.id %}
+<div class="settings">
+    <div class="settings-title-container">
+        <i class="fa-solid fa-xmark fa-2x settings-close"></i>
+        <h1>設定</h1>
+    </div>
+    <div class="settings-container">
+        <div class="account-settings">
+            <h2>アカウントの設定</h2>
+            <div class="email-change">
+                <i class="fa-regular fa-envelope"></i>
+                <div class="email-change-text">
+                    <a href="">メールアドレスの変更</a>
+                </div>
+            </div>
+            <div class="password-change">
+                <i class="fa-solid fa-asterisk"></i>
+                <div class="password-change-text">
+                    <a href="">パスワードの変更</a>
+                </div>
+            </div>
+        </div>
+        <div class="others">
+            <div class="rules">
+                <a href="{% url 'terms' %}" class="terms">利用規約</a>・
+                <a href="{% url 'privacy_policy' %}" class="policy">プライバシーポリシー</a>
+            </div>
+            <div class="logout">
+                <form action="{% url 'logout' %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="logout-link">ログアウト</button>
+                </form>
+            </div>
+            <div class="account-delete">
+                <p class="account-delete-text">アカウントの削除は</p>
+                <a href="" class="account-delete-link">こちら</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
 {% endblock %}
 
 {% block extra_js %}
@@ -93,4 +134,5 @@
         }
     });
 </script>
+<script src="{% static 'main/js/account.js' %}"></script>
 {% endblock %}

@@ -68,4 +68,16 @@ urlpatterns = [
         views.UnfollowView.as_view(),
         name="unfollow",
     ),
+    path(
+        "terms",
+        views.TermsView.as_view(),
+        name="terms",
+    ),
+    path(
+        "privacy_policy",
+        views.PrivacyPolicyView.as_view(),
+        name="privacy_policy",
+    ),
+    path("logout/", views.LogoutView.as_view(), name="logout"),
+
 ]

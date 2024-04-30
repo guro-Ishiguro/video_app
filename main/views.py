@@ -3,7 +3,7 @@ import random
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core import signing
 from django.core.mail import send_mail
@@ -352,3 +352,12 @@ class UnfollowView(LoginRequiredMixin, View):
         follow = User.objects.get(pk=kwargs["pk"])
         request.user.follow.remove(follow)
         return redirect("account", kwargs["pk"])
+
+class TermsView(LoginRequiredMixin, TemplateView):
+    template_name = "main/terms.html"
+
+class PrivacyPolicyView(LoginRequiredMixin, TemplateView):
+    template_name = "main/privacy_policy.html"
+
+class LogoutView(LogoutView):
+    pass
