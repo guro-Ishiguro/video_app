@@ -28,7 +28,7 @@
     </div>
     {% if user.id == request.user.id %}
     <div class="account-settings-btns">
-        <a href="" class="account-edit-profile-btn">プロフィールを編集</a>
+        <a href="{% url 'account_update' %}" class="account-edit-profile-btn">プロフィールを編集</a>
         <div class="account-settings-btn"><i class="fa-solid fa-gear"></i></div>
         </div>
     {% else %}

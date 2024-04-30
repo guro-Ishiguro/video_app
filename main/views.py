@@ -16,10 +16,11 @@ from django.urls import reverse
 from django.urls import reverse_lazy, reverse
 from django.utils.crypto import get_random_string
 from django.views import View
-from django.views.generic import FormView, TemplateView, ListView, DetailView, DeleteView
+from django.views.generic import FormView, TemplateView, ListView, DetailView, DeleteView, UpdateView
 from django.views.decorators.http import require_POST
 
 from .forms import (
+    AccountUpdateForm,
     EmailForm,
     EmailAuthenticationForm,
     PasswordForm,
@@ -457,3 +458,14 @@ class AccountDeleteView(LoginRequiredMixin, DeleteView):
 
 class AccountDeleteDoneView(TemplateView):
     template_name = "main/account_delete_done.html"
+
+class AccountUpdateView(LoginRequiredMixin, UpdateView):
+    model = User
+    form_class = AccountUpdateForm
+    template_name = "main/account_update.html"
+
+    def get_success_url(self):
+        return reverse_lazy("account", kwargs={"pk": self.request.user.pk})
+
+    def get_object(self):
+        return self.request.user

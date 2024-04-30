@@ -194,3 +194,18 @@ class PasswordChangeForm(PasswordChangeForm):
         self.fields["new_password1"].widget.attrs["placeholder"] = "新しいパスワード"
         self.fields["new_password2"].widget.attrs["placeholder"] = "新しいパスワード（確認）"
 
+class AccountUpdateForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ("icon", "username", "profile")
+        labels = {
+            "username": "ユーザー名",
+            "profile": "紹介文",
+        }
+        widgets = {
+            "icon": forms.FileInput(attrs={"onchange": "previewImage(this);"}),
+            "username": forms.TextInput(
+                attrs={"onkeyup": "showUsernameLength(value);"}
+            ),
+            "profile": forms.TextInput(attrs={"onkeyup": "showProfileLength(value);"}),
+        }

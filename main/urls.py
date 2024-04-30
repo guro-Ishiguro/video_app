@@ -103,4 +103,9 @@ urlpatterns = [
         views.AccountDeleteDoneView.as_view(),
         name="account_delete_done",
     ),
+    path(
+        "account_update",
+        views.AccountUpdateView.as_view(),
+        name="account_update",
+    ),
 ]
