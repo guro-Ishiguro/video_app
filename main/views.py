@@ -52,6 +52,19 @@ def generate_random_code(email):
     return random_number
 
 
+def email_reset_send_email(email):
+    random_code = generate_random_code(email)
+    context = {
+        "email": email,
+        "random_code": random_code,
+    }
+    subject = "メール再設定について"
+    message = render_to_string("mail_text/email_reset.txt", context)
+    from_email = None
+    recipient_list = [email]
+    send_mail(subject, message, from_email, recipient_list)
+
+
 def registration_send_email(email):
     random_code = generate_random_code(email)
     context = {
@@ -76,6 +89,23 @@ def password_reset_send_email(email):
     from_email = None
     recipient_list = [email]
     send_mail(subject, message, from_email, recipient_list)
+
+
+@require_POST
+def resend_email_reset_email(request, token):
+    try:
+        email = signing.loads(token)
+    except signing.BadSignature:
+        return HttpResponseBadRequest("不正なURLです。")
+    form = RegistrationCodeForm
+    email_reset_send_email(email)
+    messages.success(request, "入力されたメールアドレスに送信しました。")
+    context = {
+        "form": form,
+        "email": email,
+        "token": token,
+    }
+    return render(request, "main/email_reset_confirmation.html", context)
 
 
 class TempRegistrationView(FormView):
@@ -361,3 +391,48 @@ class PrivacyPolicyView(LoginRequiredMixin, TemplateView):
 
 class LogoutView(LogoutView):
     pass
+
+class EmailResetView(LoginRequiredMixin, FormView):
+    template_name = "main/email_reset.html"
+    form_class = EmailForm
+
+    def form_valid(self, form):
+        new_email = form.cleaned_data["email"]
+        self.token = signing.dumps(new_email)
+        email_reset_send_email(new_email)
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse("email_reset_confirmation", kwargs={"token": self.token})
+    
+
+class EmailResetConfirmationView(LoginRequiredMixin, FormView):
+    template_name = "main/email_reset_confirmation.html"
+    form_class = RegistrationCodeForm
+
+    def dispatch(self, request, *args, **kwargs):
+        self.token = self.kwargs["token"]
+        try:
+            self.new_email = signing.loads(self.token)
+        except signing.BadSignature:
+            return HttpResponseBadRequest("不正なURLです。")
+        return super().dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        user = User.objects.filter(id=self.request.user.id)
+        user.update(email=self.new_email)
+        return super().form_valid(form)
+
+    def get_form_kwargs(self, *args, **kwargs):
+        kwargs = super().get_form_kwargs(*args, **kwargs)
+        kwargs["email"] = self.new_email
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["email"] = self.new_email
+        context["token"] = self.token
+        return context
+
+    def get_success_url(self):
+        return reverse("account", kwargs={"pk": self.request.user.id})

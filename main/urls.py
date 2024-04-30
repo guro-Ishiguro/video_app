@@ -79,5 +79,15 @@ urlpatterns = [
         name="privacy_policy",
     ),
     path("logout/", views.LogoutView.as_view(), name="logout"),
-
+    path("email_reset", views.EmailResetView.as_view(), name="email_reset"),
+    path(
+        "email_reset_confirmation/<token>",
+        views.EmailResetConfirmationView.as_view(),
+        name="email_reset_confirmation",
+    ),
+    path(
+        "email_reset_confirmation/<token>/resend",
+        views.resend_email_reset_email,
+        name="email_reset_resend",
+    ),
 ]
