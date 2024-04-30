@@ -28,7 +28,7 @@
     </div>
     {% if user.id == request.user.id %}
     <div class="account-settings-btns">
-        <a href="{% url 'account_update' %}" class="account-edit-profile-btn">プロフィールを編集</a>
+        <a href="" class="account-edit-profile-btn">プロフィールを編集</a>
         <div class="account-settings-btn"><i class="fa-solid fa-gear"></i></div>
         </div>
     {% else %}
@@ -65,7 +65,7 @@
                 </div>
             </a>
             <div>
-                <a href=""><i class="fas fa-pencil-alt"></i></a>
+                <a href="{% url 'video_update' video.pk %}"><i class="fas fa-pencil-alt"></i></a>
             </div>
         </div>
         {% empty %}

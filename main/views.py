@@ -29,6 +29,7 @@ from .forms import (
     PasswordResetEmailForm,
     RegistrationCodeForm,
     ViewsCountForm,
+    VideoUpdateForm,
     VideoUploadForm,
     VideoSearchForm,
 )
@@ -469,3 +470,21 @@ class AccountUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_object(self):
         return self.request.user
+    
+class VideoUpdateView(LoginRequiredMixin, UpdateView):
+    template_name = "main/video_update.html"
+    model = Video
+    form_class = VideoUpdateForm
+
+    def get_queryset(self):
+        queryset = super().get_queryset().filter(user=self.request.user)
+        return queryset
+
+    def get_success_url(self):
+        return reverse("account", kwargs={"pk": self.request.user.pk})
+    
+@require_POST
+def video_delete(request, pk):
+    video = get_object_or_404(Video, user=request.user, pk=pk)
+    video.delete()
+    return redirect("account", request.user.id)

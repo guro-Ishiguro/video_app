@@ -209,3 +209,29 @@ class AccountUpdateForm(forms.ModelForm):
             ),
             "profile": forms.TextInput(attrs={"onkeyup": "showProfileLength(value);"}),
         }
+
+class VideoUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Video
+        fields = ("title", "description", "thumbnail")
+        widgets = {
+            "thumbnail": forms.FileInput(
+                attrs={
+                    "class": "thumbnail-form",
+                    "onchange": "previewImage(this);",
+                }
+            ),
+            "title": forms.Textarea(
+                attrs={
+                    "class": "title-form",
+                    "rows": "2",
+                    "onkeyup": "showTitleLength(value);",
+                }
+            ),
+            "description": forms.Textarea(
+                attrs={
+                    "class": "description-form",
+                    "onkeyup": "showDescriptionLength(value);",
+                }
+            ),
+        }

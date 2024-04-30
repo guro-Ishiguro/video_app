@@ -108,4 +108,6 @@ urlpatterns = [
         views.AccountUpdateView.as_view(),
         name="account_update",
     ),
+    path("video_update/<int:pk>", views.VideoUpdateView.as_view(), name="video_update"),
+    path("video_delete/<int:pk>", views.video_delete, name="video_delete"),
 ]
