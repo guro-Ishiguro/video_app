@@ -16,7 +16,7 @@
             <p class="uploaded-elapsed-time">{{ video.get_elapsed_time }}&emsp;</p>
             <p class="video-uploaded-at">{{ video.uploaded_date|date:"Y/m/d" }}</p>
         </div>
-        <a class="user-information-wrapper" href="">
+        <a class="user-information-wrapper" href="{% url 'account' video.user.id %}">
             <img src="{{ video.user.icon_url }}">
             <p class="video-creator">{{ video.user.username }}</p>
         </a>

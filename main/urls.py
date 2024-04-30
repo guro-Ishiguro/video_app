@@ -48,4 +48,10 @@ urlpatterns = [
     path("video_upload", views.VideoUploadView.as_view(), name="video_upload"),
     path("search_video", views.SearchVideoView.as_view(), name="search_video"),
     path("video_play/<int:pk>", views.PlayVideoView.as_view(), name="video_play"),
+    path(
+        "account/<int:pk>",
+        views.AccountView.as_view(),
+        name="account",
+    ),
+
 ]

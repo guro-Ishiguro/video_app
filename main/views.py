@@ -7,6 +7,7 @@ from django.contrib.auth.views import LoginView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core import signing
 from django.core.mail import send_mail
+from django.db.models import Case, Count, Prefetch, When
 from django.http import HttpResponseBadRequest
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
@@ -305,4 +306,28 @@ class PlayVideoView(LoginRequiredMixin, DetailView):
     def get_queryset(self):
         queryset = super().get_queryset()
         queryset = queryset.filter(pk=self.kwargs["pk"])
+        return queryset
+    
+
+class AccountView(LoginRequiredMixin, DetailView):
+    template_name = "main/account.html"
+    model = User
+    context_object_name = "user"
+
+    def get_queryset(self, **kwargs):
+        queryset = super().get_queryset(**kwargs)
+        queryset = queryset.prefetch_related(
+            Prefetch("videos", queryset=Video.objects.order_by("-uploaded_at"))
+        ).annotate(
+            follower_count=Count("followed", distinct=True),
+            video_count=Count("videos", distinct=True),
+        )
+        if self.kwargs["pk"] != self.request.user.pk:
+            follow_list = self.request.user.follow.all().values_list("id", flat=True)
+            queryset = queryset.annotate(
+                is_follow=Case(
+                    When(id__in=follow_list, then=True),
+                    default=False,
+                )
+            )
         return queryset

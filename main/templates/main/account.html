@@ -1,0 +1,96 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block extra_style %}
+<link rel="stylesheet" href="{% static 'main/css/account.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="account">
+    <div class="account__icon">
+        <img src="{{ user.icon_url }}">
+    </div>
+    <h2 class="account-username">
+        {{ user.username }}
+    </h2>
+    <div class="account-detail">
+        <div class="account-detail-video-count">
+            <p>{{ user.video_count }} 本の動画</p>
+        </div>
+        <p>・</p>
+        <div class="account-detail-following">
+            <p>{{ user.follower_count }} 人のフォロワー</p>
+        </div>
+    </div>
+    <div class="account-profile">
+        <p class="account-profile-text">{{ user.profile|default:"まだ登録されていません" }}</p>
+        <p class="more-button">もっと見る...</p>
+    </div>
+    {% if user.id == request.user.id %}
+    <div class="account-settings-btns">
+        <a href="" class="account-edit-profile-btn">プロフィールを編集</a>
+        <div class="account-settings-btn"><i class="fa-solid fa-gear"></i></div>
+        </div>
+    {% else %}
+    <div class="account-follow-btns">
+        {% if user.is_follow %}
+        <form action="" method="POST">
+            {% csrf_token %}
+            <button type="submit" class="account-following-btn">フォロー中</button>
+        </form>
+        {% else %}
+        <form action="" method="POST">
+            {% csrf_token %}
+            <button type="submit" class="account-follow-btn">フォロー</button>
+        </form>
+        {% endif %}
+    </div>
+    {% endif %}
+    <div class="video-container">
+    <div class="video-container">
+        {% for video in user.videos.all %}
+        <div class="video-list-container">
+            <a class="video-information-container" href="{% url 'video_play' video.id %}">
+                <div class="video-thumbnail-wrapper">
+                    <img src="{{ video.thumbnail.url }}">
+                </div>
+                <div class="video-detail-container">
+                    <div class="text-wrapper">
+                        <p class="video-title">{{ video.title }}</p>
+                        <div class="video-detail-wrapper">
+                            <p class="video-views">{{ video.views_count }}回視聴</p>・
+                            <p class="video-uploaded-at">{{ video.get_elapsed_time }}</p>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            <div>
+                <a href=""><i class="fas fa-pencil-alt"></i></a>
+            </div>
+        </div>
+        {% empty %}
+        <p>アップロードされた動画はありません</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const moreBtn = document.querySelector(".more-button");
+        const accountProfile = document.querySelector(".account-profile-text");
+        const accountProfileStr = accountProfile.textContent;
+        const accountProfileLength = accountProfileStr.length;
+        if (accountProfileLength > 200) {
+            accountProfile.textContent = accountProfileStr.substring(0, 200) + "...";
+            moreBtn.addEventListener("click", function (ev) {
+                accountProfile.textContent = "{{ user.profile }}";
+                moreBtn.style.display = "none";
+            });
+        } else {
+            moreBtn.style.display = "none";
+        }
+    });
+</script>
+{% endblock %}
