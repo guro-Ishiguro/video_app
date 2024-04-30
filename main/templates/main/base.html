@@ -16,7 +16,7 @@
     <header class="header">
         <div class="header__item">
             <div class="header__title">
-                {% block header_title %}<a href="">Video App</a>{% endblock %}
+                {% block header_title %}<a href="{% url 'home' %}">Video App</a>{% endblock %}
             </div>
             <a href="{% url 'video_upload' %}" class="header__link">
                 <i class="far fa-times-circle fa-2x upload-icon"></i>
@@ -38,7 +38,7 @@
             </a>
         </div>
         <div class="footer__item">
-            <a href="" class="footer__link">
+            <a href="{% url 'search_video' %}" class="footer__link">
                 <div class="footer__icon"><i class="fas fa-search"></i></div>
                 <div class="footer__label">検索</div>
             </a>

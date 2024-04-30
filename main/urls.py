@@ -46,4 +46,5 @@ urlpatterns = [
         name="password_reset_resend",
     ),
     path("video_upload", views.VideoUploadView.as_view(), name="video_upload"),
+    path("search_video", views.SearchVideoView.as_view(), name="search_video"),
 ]

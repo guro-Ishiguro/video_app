@@ -13,7 +13,7 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 from django.urls import reverse_lazy, reverse
 from django.utils.crypto import get_random_string
-from django.views.generic import TemplateView, FormView
+from django.views.generic import TemplateView, FormView, ListView
 from django.views.decorators.http import require_POST
 
 from .forms import (
@@ -24,14 +24,21 @@ from .forms import (
     PasswordResetEmailForm,
     RegistrationCodeForm,
     VideoUploadForm,
+    VideoSearchForm,
 )
-from .models import AuthenticationCode
+from .models import AuthenticationCode, Video
 
 User = get_user_model()
 
 
-class HomeView(TemplateView):
+class HomeView(LoginRequiredMixin, TemplateView):
     template_name = "main/home.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        video = Video.objects.all().order_by("-uploaded_at")
+        context["videos"] = video
+        return context
 
 
 def generate_random_code(email):
@@ -251,3 +258,33 @@ class VideoUploadView(LoginRequiredMixin, FormView):
         video.user = self.request.user
         video.save()
         return super().form_valid(form)
+    
+class SearchVideoView(LoginRequiredMixin, ListView):
+    template_name = "main/video_search.html"
+    model = Video
+    context_object_name = "videos"
+
+    def get(self, request, *args, **kwargs):
+        self.form = VideoSearchForm(self.request.GET)
+        return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["form"] = self.form
+        if self.form.is_valid():
+            context["keyword"] = self.form.cleaned_data["keyword"]
+        return context
+
+    def get_queryset(self):
+        queryset = super().get_queryset().order_by("-uploaded_at")
+        if self.form.is_valid():
+            keyword = self.form.cleaned_data["keyword"]
+            if keyword:
+                queryset = queryset.filter(title__icontains=keyword)
+        if "btnType" in self.request.GET:
+            btn_type = self.request.GET.get("btnType")
+            if btn_type == "new":
+                queryset = queryset.order_by("-uploaded_at")[:5]
+            else:
+                queryset = queryset.order_by("-views_count")[:5]
+        return queryset

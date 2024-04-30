@@ -171,3 +171,10 @@ class VideoUploadForm(forms.ModelForm):
                 }
             ),
         }
+
+class VideoSearchForm(forms.Form):
+    keyword = forms.CharField(
+        required=False,
+        widget=forms.TextInput(attrs={"placeholder": "動画を検索", "class": "search-form"}),
+    )
+
