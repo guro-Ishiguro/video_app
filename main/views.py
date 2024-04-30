@@ -14,6 +14,7 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 from django.urls import reverse_lazy, reverse
 from django.utils.crypto import get_random_string
+from django.views import View
 from django.views.generic import TemplateView, FormView, ListView, DetailView
 from django.views.decorators.http import require_POST
 
@@ -331,3 +332,23 @@ class AccountView(LoginRequiredMixin, DetailView):
                 )
             )
         return queryset
+    
+class FollowingView(LoginRequiredMixin, ListView):
+    template_name = "main/following.html"
+    context_object_name = "followings"
+
+    def get_queryset(self):
+        queryset = get_object_or_404(User, id=self.request.user.id).follow.all()
+        return queryset
+    
+class FollowView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        follow = User.objects.get(pk=kwargs["pk"])
+        request.user.follow.add(follow)
+        return redirect("account", kwargs["pk"])
+
+class UnfollowView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        follow = User.objects.get(pk=kwargs["pk"])
+        request.user.follow.remove(follow)
+        return redirect("account", kwargs["pk"])

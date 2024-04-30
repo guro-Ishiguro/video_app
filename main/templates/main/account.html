@@ -34,12 +34,12 @@
     {% else %}
     <div class="account-follow-btns">
         {% if user.is_follow %}
-        <form action="" method="POST">
+        <form action="{% url 'unfollow' user.id %}" method="POST">
             {% csrf_token %}
             <button type="submit" class="account-following-btn">フォロー中</button>
         </form>
         {% else %}
-        <form action="" method="POST">
+        <form action="{% url 'follow' user.id %}" method="POST">
             {% csrf_token %}
             <button type="submit" class="account-follow-btn">フォロー</button>
         </form>

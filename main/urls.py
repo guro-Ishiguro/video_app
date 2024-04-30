@@ -53,5 +53,19 @@ urlpatterns = [
         views.AccountView.as_view(),
         name="account",
     ),
-
+    path(
+        "following",
+        views.FollowingView.as_view(),
+        name="following",
+    ),
+    path(
+        "follow/<int:pk>",
+        views.FollowView.as_view(),
+        name="follow",
+    ),
+    path(
+        "unfollow/<int:pk>",
+        views.UnfollowView.as_view(),
+        name="unfollow",
+    ),
 ]
