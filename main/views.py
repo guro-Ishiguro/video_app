@@ -16,7 +16,7 @@ from django.urls import reverse
 from django.urls import reverse_lazy, reverse
 from django.utils.crypto import get_random_string
 from django.views import View
-from django.views.generic import TemplateView, FormView, ListView, DetailView
+from django.views.generic import FormView, TemplateView, ListView, DetailView, DeleteView
 from django.views.decorators.http import require_POST
 
 from .forms import (
@@ -445,3 +445,15 @@ class PasswordChangeView(auth_views.PasswordChangeView):
 
     def get_success_url(self):
         return reverse("account", kwargs={"pk": self.request.user.pk})
+    
+class AccountDeleteView(LoginRequiredMixin, DeleteView):
+    template_name = "main/account_delete.html"
+    model = User
+    object_context_name = "user"
+    success_url = reverse_lazy("account_delete_done")
+
+    def get_object(self):
+        return self.request.user
+
+class AccountDeleteDoneView(TemplateView):
+    template_name = "main/account_delete_done.html"
