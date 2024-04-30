@@ -90,4 +90,7 @@ urlpatterns = [
         views.resend_email_reset_email,
         name="email_reset_resend",
     ),
+    path(
+        "password_change/", views.PasswordChangeView.as_view(), name="password_change"
+    ),
 ]

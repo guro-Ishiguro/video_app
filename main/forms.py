@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth import get_user_model, authenticate
 from django.core.exceptions import ValidationError
+from django.contrib.auth.forms import PasswordChangeForm
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 
@@ -182,4 +183,14 @@ class ViewsCountForm(forms.ModelForm):
     class Meta:
         model = Video
         fields = ("views_count",)
+
+class PasswordChangeForm(PasswordChangeForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["old_password"].widget.attrs["class"] = "old_password"
+        self.fields["new_password1"].widget.attrs["class"] = "new_password1"
+        self.fields["new_password2"].widget.attrs["class"] = "new_password2"
+        self.fields["old_password"].widget.attrs["placeholder"] = "現在のパスワード"
+        self.fields["new_password1"].widget.attrs["placeholder"] = "新しいパスワード"
+        self.fields["new_password2"].widget.attrs["placeholder"] = "新しいパスワード（確認）"
 

@@ -2,6 +2,7 @@ import random
 
 from django.contrib import messages
 from django.contrib.auth import get_user_model
+from django.contrib.auth import views as auth_views
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -23,6 +24,7 @@ from .forms import (
     EmailAuthenticationForm,
     PasswordForm,
     PasswordResetForm,
+    PasswordChangeForm,
     PasswordResetEmailForm,
     RegistrationCodeForm,
     ViewsCountForm,
@@ -436,3 +438,10 @@ class EmailResetConfirmationView(LoginRequiredMixin, FormView):
 
     def get_success_url(self):
         return reverse("account", kwargs={"pk": self.request.user.id})
+    
+class PasswordChangeView(auth_views.PasswordChangeView):
+    template_name = "main/password_change.html"
+    form_class = PasswordChangeForm
+
+    def get_success_url(self):
+        return reverse("account", kwargs={"pk": self.request.user.pk})
