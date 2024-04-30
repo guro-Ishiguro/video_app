@@ -4,7 +4,9 @@ from django.db import models
 
 class User(AbstractUser):
     email = models.EmailField("メールアドレス", unique=True)
-    username = models.CharField("ユーザ名", max_length=50, default="ゲスト", unique=False)
+    username = models.CharField(
+        "ユーザ名", max_length=50, default="ゲスト", unique=False
+    )
     profile = models.TextField("プロフィール", max_length=500)
     icon = models.ImageField("アイコン", upload_to="icon/", blank=True)
     follow = models.ManyToManyField("User", related_name="followed", symmetrical=False)

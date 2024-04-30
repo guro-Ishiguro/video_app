@@ -18,7 +18,7 @@
             <div class="header__title">
                 {% block header_title %}<a href="">Video App</a>{% endblock %}
             </div>
-            <a href="" class="header__link">
+            <a href="{% url 'video_upload' %}" class="header__link">
                 <i class="far fa-times-circle fa-2x upload-icon"></i>
             </a>
         </div>
@@ -67,5 +67,8 @@
     {% endblock %}
     {% block extra_js %}{% endblock %}
 </body>
-
 </html>
+
+{% block extra_js %}
+<script src="{% static 'main/js/video_upload.js' %}"></script>
+{% endblock %}

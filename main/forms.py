@@ -4,7 +4,7 @@ from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 
-from .models import AuthenticationCode
+from .models import AuthenticationCode, Video
 
 User = get_user_model()
 
@@ -21,7 +21,9 @@ class EmailForm(forms.ModelForm):
         model = User
         fields = ("email",)
         widgets = {
-            "email": forms.EmailInput(attrs={"class": "form", "placeholder": "メールアドレス"})
+            "email": forms.EmailInput(
+                attrs={"class": "form", "placeholder": "メールアドレス"}
+            )
         }
 
 
@@ -38,7 +40,9 @@ class RegistrationCodeForm(forms.ModelForm):
         authentication_code = authentication_code_obj.code
         elapased_time = timezone.now() - authentication_code_obj.updated_at
         if elapased_time.seconds > 30:
-            raise ValidationError("この認証コードは無効です。新しい認証コードを発行してください。")
+            raise ValidationError(
+                "この認証コードは無効です。新しい認証コードを発行してください。"
+            )
         if input_code != authentication_code:
             raise ValidationError("認証コードが正しくありません。")
         return input_code
@@ -112,7 +116,9 @@ class PasswordResetEmailForm(forms.Form):
         email = self.cleaned_data["email"]
         user = User.objects.filter(email=email)
         if not user.exists():
-            raise ValidationError("このメールアドレスを使用しているユーザーは存在しません。")
+            raise ValidationError(
+                "このメールアドレスを使用しているユーザーは存在しません。"
+            )
         return email
 
 
@@ -121,7 +127,9 @@ class PasswordResetForm(forms.Form):
         widget=forms.PasswordInput({"placeholder": "新しいパスワード", "class": "form"})
     )
     new_password2 = forms.CharField(
-        widget=forms.PasswordInput({"placeholder": "新しいパスワード(確認)", "class": "form"})
+        widget=forms.PasswordInput(
+            {"placeholder": "新しいパスワード(確認)", "class": "form"}
+        )
     )
 
     def clean(self):
@@ -130,3 +138,36 @@ class PasswordResetForm(forms.Form):
         if new_password1 != new_password2:
             raise ValidationError("パスワードが一致しません")
         return self.cleaned_data
+
+
+class VideoUploadForm(forms.ModelForm):
+    class Meta:
+        model = Video
+        fields = ("title", "description", "thumbnail", "video")
+        widgets = {
+            "thumbnail": forms.FileInput(
+                attrs={"class": "thumbnail-form", "onchange": "thumbnailPreview(this);"}
+            ),
+            "title": forms.Textarea(
+                attrs={
+                    "class": "title-form",
+                    "placeholder": "タイトルを入力",
+                    "onkeyup": "showTitleLength(value);",
+                    "rows": "2",
+                }
+            ),
+            "description": forms.Textarea(
+                attrs={
+                    "class": "description-form",
+                    "placeholder": "詳細文を入力",
+                    "onkeyup": "showDescriptionLength(value);",
+                }
+            ),
+            "video": forms.FileInput(
+                attrs={
+                    "class": "video-form",
+                    "accept": "video/*",
+                    "id": "video-upload-btn",
+                }
+            ),
+        }

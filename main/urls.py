@@ -45,4 +45,5 @@ urlpatterns = [
         views.resend_password_reset_email,
         name="password_reset_resend",
     ),
+    path("video_upload", views.VideoUploadView.as_view(), name="video_upload"),
 ]

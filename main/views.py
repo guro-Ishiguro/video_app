@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.views import LoginView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core import signing
 from django.core.mail import send_mail
 from django.http import HttpResponseBadRequest
@@ -22,6 +23,7 @@ from .forms import (
     PasswordResetForm,
     PasswordResetEmailForm,
     RegistrationCodeForm,
+    VideoUploadForm,
 )
 from .models import AuthenticationCode
 
@@ -100,7 +102,7 @@ class TempRegistrationDoneView(FormView):
 
     def get_success_url(self):
         return reverse("signup", kwargs={"token": self.token})
-    
+
     def get_form_kwargs(self, *args, **kwargs):
         kwargs = super().get_form_kwargs(*args, **kwargs)
         kwargs["email"] = self.email
@@ -237,3 +239,15 @@ class PasswordResetView(FormView):
         context = super().get_context_data(**kwargs)
         context["email"] = self.email
         return context
+
+
+class VideoUploadView(LoginRequiredMixin, FormView):
+    template_name = "main/video_upload.html"
+    form_class = VideoUploadForm
+    success_url = reverse_lazy("home")
+
+    def form_valid(self, form):
+        video = form.save(commit=False)
+        video.user = self.request.user
+        video.save()
+        return super().form_valid(form)
