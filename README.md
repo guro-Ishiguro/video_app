@@ -55,4 +55,4 @@ python3 manage.py runserver
 ```
 
 ### 仕様技術一覧
-<img src="https://img.shields.io/badge/-Django-#092E20.svg?logo=Django">
+<img src="https://img.shields.io/badge/-django-#092E20.svg?logo=django">
