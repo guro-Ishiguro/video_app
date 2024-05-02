@@ -43,16 +43,9 @@
 ### ローカルでのプロジェクトの作成と起動
 
 ```bash
+git clone https://github.com/guro-Ishiguro/video_app.git
+cd video_app
 pip install -r requirements.txt
-```
-
-```bash
 python3 manage.py migrate
-```
-
-```bash
 python3 manage.py runserver
 ```
-
-### 仕様技術一覧
-<img src="https://img.shields.io/badge/-Django-092E20.svg?logo=django&style=flat">
